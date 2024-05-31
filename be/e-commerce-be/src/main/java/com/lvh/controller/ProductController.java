@@ -1,8 +1,8 @@
 package com.lvh.controller;
 
 import com.lvh.constraint.AppConstraint;
-import com.lvh.dto.PageResponse;
 import com.lvh.dto.ProductDto;
+import com.lvh.dto.ProductPageResponse;
 import com.lvh.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -28,9 +28,9 @@ public class ProductController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<PageResponse> searchProductByName(@RequestParam String name,
-                                                                @RequestParam(value = "pageNum", required = false, defaultValue = AppConstraint.PAGE_NUM) int pageNum,
-                                                                @RequestParam(value = "pageSize", required = false, defaultValue = AppConstraint.PAGE_SIZE) int pageSize){
+    public ResponseEntity<ProductPageResponse> searchProductByName(@RequestParam String name,
+                                                                   @RequestParam(value = "pageNum", required = false, defaultValue = AppConstraint.PAGE_NUM) int pageNum,
+                                                                   @RequestParam(value = "pageSize", required = false, defaultValue = AppConstraint.PAGE_SIZE) int pageSize){
         return ResponseEntity.ok(productService.searchProductByName(name, pageNum, pageSize));
     }
 

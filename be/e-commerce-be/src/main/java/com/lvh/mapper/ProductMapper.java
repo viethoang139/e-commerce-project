@@ -5,18 +5,6 @@ import com.lvh.entity.Product;
 
 public class ProductMapper {
 
-    public static Product mapToProduct(ProductDto productDto){
-        Product product = new Product();
-        product.setId(productDto.getId());
-        product.setSku(productDto.getSku());
-        product.setName(productDto.getName());
-        product.setDescription(productDto.getDescription());
-        product.setUnitPrice(productDto.getUnitPrice());
-        product.setImageUrl(productDto.getImageUrl());
-        product.setActive(productDto.isActive());
-        product.setUnitsInStock(productDto.getUnitsInStock());
-        return product;
-    }
 
     public static ProductDto mapToProductDto(Product product){
         ProductDto productDto = new ProductDto();

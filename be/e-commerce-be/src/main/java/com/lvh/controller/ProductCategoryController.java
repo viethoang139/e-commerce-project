@@ -1,10 +1,8 @@
 package com.lvh.controller;
 
 import com.lvh.constraint.AppConstraint;
-import com.lvh.dto.PageResponse;
 import com.lvh.dto.ProductCategoryDto;
-import com.lvh.dto.ProductDto;
-import com.lvh.entity.ProductCategory;
+import com.lvh.dto.ProductPageResponse;
 import com.lvh.service.ProductCategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -30,9 +28,9 @@ public class ProductCategoryController {
     }
 
     @GetMapping("/products/{id}")
-    public ResponseEntity<PageResponse> getAllProductsByCategoryId(@PathVariable("id") Long categoryId,
-    @RequestParam(value = "pageNum", required = false, defaultValue = AppConstraint.PAGE_NUM) int pageNum,
-    @RequestParam(value = "pageSize", required = false, defaultValue = AppConstraint.PAGE_SIZE) int pageSize
+    public ResponseEntity<ProductPageResponse> getAllProductsByCategoryId(@PathVariable("id") Long categoryId,
+                                                                          @RequestParam(value = "pageNum", required = false, defaultValue = AppConstraint.PAGE_NUM) int pageNum,
+                                                                          @RequestParam(value = "pageSize", required = false, defaultValue = AppConstraint.PAGE_SIZE) int pageSize
     ){
         return ResponseEntity.ok(productCategoryService.findAllProductWithCategoryId(pageNum, pageSize,categoryId));
     }

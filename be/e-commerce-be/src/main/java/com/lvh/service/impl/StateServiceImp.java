@@ -27,14 +27,14 @@ public class StateServiceImp implements StateService {
     @Override
     public List<StateDto> getAllStates() {
         List<State> states = stateRepository.findAll();
-        return states.stream().map(state -> StateMapper.mapToStateDto(state))
+        return states.stream().map(StateMapper::mapToStateDto)
                 .collect(Collectors.toList());
     }
 
     @Override
     public List<StateDto> findAllStatesByCountryId(Integer countryId) {
         List<State> states = stateRepository.findStateByCountryId(countryId);
-        return states.stream().map(state -> StateMapper.mapToStateDto(state))
+        return states.stream().map(StateMapper::mapToStateDto)
                 .collect(Collectors.toList());
     }
 
@@ -42,7 +42,7 @@ public class StateServiceImp implements StateService {
     public List<StateDto> findStatesByCountryCode(String code) {
         List<State> states = stateRepository.findStateByCountryCode(code);
 
-        return states.stream().map(state -> StateMapper.mapToStateDto(state))
+        return states.stream().map(StateMapper::mapToStateDto)
                 .collect(Collectors.toList());
 
     }

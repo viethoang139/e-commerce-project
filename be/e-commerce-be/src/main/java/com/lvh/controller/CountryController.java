@@ -1,7 +1,6 @@
 package com.lvh.controller;
 
 import com.lvh.dto.CountryDto;
-import com.lvh.dto.StateDto;
 import com.lvh.service.CountryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

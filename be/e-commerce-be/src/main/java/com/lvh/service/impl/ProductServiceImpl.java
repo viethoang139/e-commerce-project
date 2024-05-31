@@ -1,7 +1,7 @@
 package com.lvh.service.impl;
 
-import com.lvh.dto.PageResponse;
 import com.lvh.dto.ProductDto;
+import com.lvh.dto.ProductPageResponse;
 import com.lvh.entity.Product;
 import com.lvh.exception.ResourceNotFoundException;
 import com.lvh.mapper.ProductMapper;
@@ -25,16 +25,16 @@ public class ProductServiceImpl implements ProductService {
 
         List<Product> products = productRepository.findAll();
 
-        return products.stream().map(product -> ProductMapper.mapToProductDto(product)).collect(Collectors.toList());
+        return products.stream().map(ProductMapper::mapToProductDto).collect(Collectors.toList());
     }
 
     @Override
-    public PageResponse searchProductByName(String name, int pageNum, int pageSize) {
+    public ProductPageResponse searchProductByName(String name, int pageNum, int pageSize) {
         Pageable pageable = PageRequest.of(pageNum,pageSize);
         Page<Product> productPage = productRepository.searchProductByName(name, pageable);
         List<Product> products = productPage.getContent();
-        List<ProductDto> content = products.stream().map(product -> ProductMapper.mapToProductDto(product)).collect(Collectors.toList());;
-        PageResponse pageResponse = new PageResponse();
+        List<ProductDto> content = products.stream().map(ProductMapper::mapToProductDto).collect(Collectors.toList());
+        ProductPageResponse pageResponse = new ProductPageResponse();
         pageResponse.setProductDtos(content);
         pageResponse.setPageNum(pageNum);
         pageResponse.setPageSize(pageSize);
@@ -49,8 +49,7 @@ public class ProductServiceImpl implements ProductService {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException("Product","ID",productId.toString()));
 
-        ProductDto productDto = ProductMapper.mapToProductDto(product);
-        return productDto;
+        return ProductMapper.mapToProductDto(product);
     }
 
 

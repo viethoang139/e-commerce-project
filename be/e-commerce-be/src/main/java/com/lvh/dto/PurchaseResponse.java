@@ -1,6 +1,5 @@
 package com.lvh.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NonNull;
 

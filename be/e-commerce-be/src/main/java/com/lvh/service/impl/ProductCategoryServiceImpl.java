@@ -1,8 +1,9 @@
 package com.lvh.service.impl;
 
-import com.lvh.dto.PageResponse;
+
 import com.lvh.dto.ProductCategoryDto;
 import com.lvh.dto.ProductDto;
+import com.lvh.dto.ProductPageResponse;
 import com.lvh.entity.Product;
 import com.lvh.entity.ProductCategory;
 import com.lvh.exception.ResourceNotFoundException;
@@ -15,7 +16,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,7 +31,7 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
     @Override
     public List<ProductCategoryDto> getAllCategories() {
         List<ProductCategory> productCategories = productCategoryRepository.findAll();
-        return productCategories.stream().map(productCategory -> ProductCategoryMapper.mapToProductCategoryDto(productCategory))
+        return productCategories.stream().map(ProductCategoryMapper::mapToProductCategoryDto)
                 .collect(Collectors.toList());
     }
 
@@ -43,13 +43,13 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
     }
 
     @Override
-    public PageResponse findAllProductWithCategoryId(int pageNum, int pageSize, Long categoryId) {
+    public ProductPageResponse findAllProductWithCategoryId(int pageNum, int pageSize, Long categoryId) {
 
         Pageable pageable = PageRequest.of(pageNum,pageSize);
         Page<Product> productPage = productRepository.findByProductCategoryId(categoryId, pageable);
         List<Product> products = productPage.getContent();
-        List<ProductDto> content = products.stream().map(product -> ProductMapper.mapToProductDto(product)).collect(Collectors.toList());;
-        PageResponse pageResponse = new PageResponse();
+        List<ProductDto> content = products.stream().map(ProductMapper::mapToProductDto).collect(Collectors.toList());
+        ProductPageResponse pageResponse = new ProductPageResponse();
         pageResponse.setProductDtos(content);
         pageResponse.setPageNum(pageNum);
         pageResponse.setPageSize(pageSize);

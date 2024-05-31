@@ -1,7 +1,7 @@
 package com.lvh.service;
 
 import com.lvh.dto.CountryDto;
-import com.lvh.dto.StateDto;
+
 
 import java.util.List;
 
@@ -11,7 +11,7 @@ public interface CountryService {
 
     List<CountryDto> findAllCountries();
 
-    List<StateDto> findAllStatesByCountryId(Integer countryId);
+    //List<StateDto> findAllStatesByCountryId(Integer countryId);
 
 
 
