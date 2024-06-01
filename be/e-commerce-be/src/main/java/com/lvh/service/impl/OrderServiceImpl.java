@@ -21,6 +21,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -38,9 +40,12 @@ public class OrderServiceImpl implements OrderService {
 
         Customer customer = customerRepository.findByEmail(email);
         CustomerDto customerDto = CustomerMapper.mapToCustomerDto(customer);
-        Set<Order> orders = customer.getOrders();
-        Set<OrderDto> orderDtoSet = new HashSet<>();
-        for(Order order : orders){
+        Set<OrderDto> orderDtoSet = new LinkedHashSet<>();
+
+        Pageable pageable = PageRequest.of(pageNum,pageSize);
+        Page<Order> orderPage = orderRepository.findByCustomerEmailOrderByDateCreatedDesc(email,pageable);
+        List<Order> orderList = orderPage.getContent();
+        for(Order order : orderList){
             Address billingAddress = order.getBillingAddress();
             Address shippingAddress = order.getShippingAddress();
             AddressDto billingAddressDto = AddressMapper.mapToAddressDto(billingAddress);
@@ -55,9 +60,6 @@ public class OrderServiceImpl implements OrderService {
             orderDto.setShippingAddress(shippingAddressDto);
             orderDtoSet.add(orderDto);
         }
-
-        Pageable pageable = PageRequest.of(pageNum,pageSize);
-        Page<Order> orderPage = orderRepository.findByCustomerEmail(email,pageable);
         OrderPageResponse orderPageResponse = new OrderPageResponse();
         orderPageResponse.setOrderDtos(orderDtoSet);
         orderPageResponse.setPageNum(pageNum);
