@@ -33,6 +33,7 @@ export class CheckoutComponent implements OnInit{
   creditCardMonths: number[] = [];
   creditCardYears: number[] = [];
 
+  storage: Storage = sessionStorage;
 
   constructor(private formBuilder: FormBuilder,
     private formService: FormService,
@@ -47,12 +48,14 @@ export class CheckoutComponent implements OnInit{
 
       this.reviewCartDetails();
 
+      const theEmail = JSON.parse(this.storage.getItem('userEmail')!);
+
       this.checkOutFormGroup = 
       this.formBuilder.group({
         customer: this.formBuilder.group({
           firstName: new FormControl('', [Validators.required, Validators.minLength(2), CustomValidators.notOnlyWhitespace]),
           lastName: new FormControl('', [Validators.required, Validators.minLength(2), CustomValidators.notOnlyWhitespace]),
-          email: new FormControl('', 
+          email: new FormControl(theEmail, 
             [Validators.required,
               Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')
             ]
