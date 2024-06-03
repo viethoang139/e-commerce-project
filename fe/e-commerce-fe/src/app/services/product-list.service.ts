@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ProductList } from '../commons/product-list';
 import { ProductCategory } from '../commons/product-category';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -14,8 +15,8 @@ export class ProductListService {
 
   constructor(private httpClient: HttpClient) { }
 
-  categoryUrl: string = "http://localhost:8080/api/categories";
-  productUrl: string = "http://localhost:8080/api/products";
+  categoryUrl: string = environment.shopApiUrl +  "/categories";
+  productUrl: string =  environment.shopApiUrl +  "/products";
 
   getAllProduct(theCategoryId: number): Observable<ProductList[]>{
     const searchUrl = `${this.categoryUrl}/products/${theCategoryId}`;

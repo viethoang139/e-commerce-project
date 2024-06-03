@@ -3,6 +3,7 @@ import { Observable, of } from 'rxjs';
 import { Country } from '../commons/country';
 import { HttpClient } from '@angular/common/http';
 import { State } from '../commons/state';
+import { environment } from '../../environments/environment';
 
 
 @Injectable({
@@ -11,8 +12,8 @@ import { State } from '../commons/state';
 export class FormService {
 
 
-  private countriesUrl = "http://localhost:8080/api/countries";
-  private statesUrl = "http://localhost:8080/api/states";
+  private countriesUrl = environment.shopApiUrl +  "/countries";
+  private statesUrl = environment.shopApiUrl +  "/states";
 
   constructor(private httpClient: HttpClient) { }
 
