@@ -1,42 +1,43 @@
 package com.lvh.config;
 
-import com.okta.spring.boot.oauth.Okta;
+import com.lvh.security.JwtFilter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.web.accept.ContentNegotiationStrategy;
-import org.springframework.web.accept.HeaderContentNegotiationStrategy;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
 @Configuration
+@EnableWebSecurity
+@RequiredArgsConstructor
+@EnableMethodSecurity(securedEnabled = true)
 public class SecurityConfiguration {
 
+    private final JwtFilter jwtAuthFilter;
+    private final AuthenticationProvider authenticationProvider;
+
     @Bean
-    protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http.cors(Customizer.withDefaults())
+                .csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(request ->
+                        request.requestMatchers("api/auth/**")
+                                .permitAll().anyRequest().authenticated()
+                ).sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authenticationProvider(authenticationProvider)
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
-        //protect endpoint /api/orders
-        http.authorizeHttpRequests(requests ->
-                        requests
-                                .requestMatchers("/api/orders/**")
-                                .authenticated()
-                                .anyRequest().permitAll())
-                .oauth2ResourceServer(oauth2ResourceServer -> oauth2ResourceServer.jwt(Customizer.withDefaults()));
-
-        // + CORS filters
-        http.cors(Customizer.withDefaults());
-
-        // + content negotiation strategy
-        http.setSharedObject(ContentNegotiationStrategy.class, new HeaderContentNegotiationStrategy());
-
-        // + non-empty response body for 401 (more friendly)
-        Okta.configureResourceServer401ResponseBody(http);
-
-        // we are not using Cookies for session tracking >> disable CSRF
-        http.csrf(AbstractHttpConfigurer::disable);
-
-        return http.build();
+       return http.build();
     }
+
+
 
 }
 
