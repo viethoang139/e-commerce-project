@@ -2,7 +2,6 @@ package com.lvh.service.impl;
 
 import com.lvh.dto.CountryDto;
 import com.lvh.entity.Country;
-import com.lvh.exception.ResourceNotFoundException;
 import com.lvh.mapper.CountryMapper;
 import com.lvh.repository.CountryRepository;
 import com.lvh.service.CountryService;
@@ -10,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @Service
@@ -21,7 +21,7 @@ public class CountryServiceImpl implements CountryService {
     @Override
     public CountryDto findCountryById(Integer countryId) {
         Country country = countryRepository.findById(countryId)
-                .orElseThrow(() -> new ResourceNotFoundException("Country", "ID", countryId.toString()));
+                .orElseThrow(() -> new NoSuchElementException("Not found country with ID: " + countryId));
         return CountryMapper.mapToCountryDto(country);
     }
 

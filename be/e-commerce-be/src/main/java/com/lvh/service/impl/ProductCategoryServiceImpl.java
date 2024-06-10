@@ -6,7 +6,6 @@ import com.lvh.dto.ProductDto;
 import com.lvh.dto.ProductPageResponse;
 import com.lvh.entity.Product;
 import com.lvh.entity.ProductCategory;
-import com.lvh.exception.ResourceNotFoundException;
 import com.lvh.mapper.ProductCategoryMapper;
 import com.lvh.mapper.ProductMapper;
 import com.lvh.repository.ProductCategoryRepository;
@@ -19,6 +18,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @Service
@@ -38,7 +38,7 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
     @Override
     public ProductCategoryDto getCategoryById(Long categoryId) {
         ProductCategory productCategory = productCategoryRepository.findById(categoryId)
-                .orElseThrow(() -> new ResourceNotFoundException("Category","ID",categoryId.toString()));
+                .orElseThrow(() -> new NoSuchElementException("Not found product category with ID: " + categoryId));
         return ProductCategoryMapper.mapToProductCategoryDto(productCategory);
     }
 

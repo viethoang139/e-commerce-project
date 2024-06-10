@@ -2,7 +2,6 @@ package com.lvh.service.impl;
 
 import com.lvh.dto.StateDto;
 import com.lvh.entity.State;
-import com.lvh.exception.ResourceNotFoundException;
 import com.lvh.mapper.StateMapper;
 import com.lvh.repository.StateRepository;
 import com.lvh.service.StateService;
@@ -10,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @Service
@@ -21,7 +21,7 @@ public class StateServiceImp implements StateService {
     @Override
     public StateDto getStateById(Integer id) {
         State state = stateRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("State","ID",id.toString()));
+                .orElseThrow(() -> new NoSuchElementException("Not found state with ID: " + id));
         return StateMapper.mapToStateDto(state);
     }
     @Override

@@ -3,7 +3,6 @@ package com.lvh.service.impl;
 import com.lvh.dto.ProductDto;
 import com.lvh.dto.ProductPageResponse;
 import com.lvh.entity.Product;
-import com.lvh.exception.ResourceNotFoundException;
 import com.lvh.mapper.ProductMapper;
 import com.lvh.repository.ProductRepository;
 import com.lvh.service.ProductService;
@@ -14,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @Service
@@ -46,9 +46,8 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductDto getProductById(Long productId) {
-        Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new ResourceNotFoundException("Product","ID",productId.toString()));
-
+        Product product = productRepository.findById(productId).
+                orElseThrow(() -> new NoSuchElementException("Not found product with ID: " + productId));
         return ProductMapper.mapToProductDto(product);
     }
 
