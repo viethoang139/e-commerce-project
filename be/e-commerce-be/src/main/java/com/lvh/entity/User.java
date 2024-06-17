@@ -13,7 +13,9 @@ import java.security.Principal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Getter
@@ -29,7 +31,9 @@ public class User implements UserDetails, Principal {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    @Column(name = "first_name")
     private String firstName;
+    @Column(name = "last_name")
     private String lastName;
     private LocalDate dateOfBirth;
     @Column(unique = true)
@@ -40,6 +44,19 @@ public class User implements UserDetails, Principal {
 
     @ManyToMany(fetch = FetchType.EAGER)
     private List<Role> roles;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private Set<Order> orders;
+
+    public void add(Order order){
+        if(order != null){
+            if(orders == null){
+                orders = new HashSet<>();
+            }
+            orders.add(order);
+            order.setUser(this);
+        }
+    }
 
     @CreatedDate
     @Column(nullable = false, updatable = false)

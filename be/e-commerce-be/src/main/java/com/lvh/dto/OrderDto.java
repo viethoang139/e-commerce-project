@@ -20,7 +20,7 @@ public class OrderDto {
     private Date dateCreated;
     private Date lastUpdated;
     private Set<OrderItemDto> orderItems;
-    private CustomerDto customer;
+    private UserDto user;
     private AddressDto shippingAddress;
     private AddressDto billingAddress;
 }
