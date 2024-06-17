@@ -10,7 +10,7 @@ import { OrderHistoryService } from '../../services/order-history.service';
 export class OrderHistoryComponent implements OnInit{
 
   orderHistoryList: OrderHistory[] = [];
-  storage: Storage = sessionStorage;
+
 
   constructor(private orderHistoryService: OrderHistoryService){
 
@@ -21,7 +21,7 @@ export class OrderHistoryComponent implements OnInit{
   }
 
   handleOrderHistory() {
-      const theEmail = JSON.parse(this.storage.getItem('userEmail')!);
+      const theEmail = sessionStorage.getItem('userEmail');
       this.orderHistoryService.getOrderHistory(theEmail)
       .subscribe(data => {
          this.orderHistoryList = data.orderDtos;

@@ -41,21 +41,23 @@ export class CheckoutComponent implements OnInit{
     private checkoutService: CheckoutService,
     private router: Router
   ){
-
+    if(localStorage.getItem('token') == null){
+      this.router.navigate(['login']);
+    }
   }
 
   ngOnInit(): void {
 
       this.reviewCartDetails();
 
-      const theEmail = JSON.parse(this.storage.getItem('userEmail')!);
+      const theEmail = sessionStorage.getItem('userEmail')
 
-      this.checkOutFormGroup = 
+      this.checkOutFormGroup =
       this.formBuilder.group({
-        customer: this.formBuilder.group({
+        user: this.formBuilder.group({
           firstName: new FormControl('', [Validators.required, Validators.minLength(2), CustomValidators.notOnlyWhitespace]),
           lastName: new FormControl('', [Validators.required, Validators.minLength(2), CustomValidators.notOnlyWhitespace]),
-          email: new FormControl(theEmail, 
+          email: new FormControl(theEmail,
             [Validators.required,
               Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')
             ]
@@ -114,14 +116,11 @@ export class CheckoutComponent implements OnInit{
 
       this.cartService.totalQuantity.subscribe(totalQuantity => {
           this.totalQuantity = totalQuantity;
-      
+
       })
   }
 
   onSubmit(){
-
-
-
     console.log("handling the submit button");
 
     if(this.checkOutFormGroup.invalid){
@@ -145,9 +144,9 @@ export class CheckoutComponent implements OnInit{
 
     let purchase = new Purchase();
 
-    purchase.customer = this.checkOutFormGroup.controls['customer'].value;
+    purchase.user = this.checkOutFormGroup.controls['user'].value;
 
-    
+
     purchase.shippingAddress = this.checkOutFormGroup.controls['shippingAddress'].value;
     const shippingState: State = JSON.parse(JSON.stringify(purchase.shippingAddress.state));
     const shippingCountry: Country = JSON.parse(JSON.stringify(purchase.shippingAddress.country));
@@ -184,7 +183,7 @@ export class CheckoutComponent implements OnInit{
     this.cartService.cartItem = [];
     this.cartService.totalPrice.next(0);
     this.cartService.totalQuantity.next(0);
-
+    this.storage.removeItem('cartItem');
     this.checkOutFormGroup.reset();
 
     this.router.navigateByUrl("/product");
@@ -192,15 +191,15 @@ export class CheckoutComponent implements OnInit{
   }
 
   get firstName(){
-    return this.checkOutFormGroup.get('customer.firstName');
+    return this.checkOutFormGroup.get('user.firstName');
   }
 
   get lastName(){
-    return this.checkOutFormGroup.get('customer.lastName');
+    return this.checkOutFormGroup.get('user.lastName');
   }
 
   get email(){
-    return this.checkOutFormGroup.get('customer.email');
+    return this.checkOutFormGroup.get('user.email');
   }
 
   get shippingAddressStreet(){
@@ -310,7 +309,7 @@ export class CheckoutComponent implements OnInit{
         formGroup.get('state').setValue(data[0]);
     })
 
-   
+
   }
 
 }

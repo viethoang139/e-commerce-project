@@ -18,24 +18,13 @@ import { FormService } from './services/form-service';
 import { CheckoutService } from './services/checkout.service';
 import { LoginStatusComponent } from './components/login-status/login-status.component';
 import { LoginComponent } from './components/login/login.component';
-import { OKTA_CONFIG, OktaAuthModule } from '@okta/okta-angular';
-
-import{
-  OktaCallbackComponent,
-} from '@okta/okta-angular';
-
-import {
-  OktaAuth
-} from '@okta/okta-auth-js'
-
-import myAppConfig from './config/my-app-config';
 import { MembersPageComponent } from './components/members-page/members-page.component';
 import { OrderHistoryComponent } from './components/order-history/order-history.component';
 import { AuthInterceptorService } from './services/auth-interceptor.service';
+import { RegisterComponent } from './components/register/register.component';
+import { ActivateAccountComponent } from './components/activate-account/activate-account.component';
+import {CodeInputModule} from "angular-code-input";
 
-const oktaConfig = myAppConfig.oidc;
-
-const oktaAuth = new OktaAuth(oktaConfig);
 
 @NgModule({
   declarations: [
@@ -50,7 +39,9 @@ const oktaAuth = new OktaAuth(oktaConfig);
     LoginComponent,
     LoginStatusComponent,
     MembersPageComponent,
-    OrderHistoryComponent
+    OrderHistoryComponent,
+    RegisterComponent,
+    ActivateAccountComponent
   ],
   imports: [
     BrowserModule,
@@ -59,10 +50,9 @@ const oktaAuth = new OktaAuth(oktaConfig);
     FormsModule,
     NgbModule,
     ReactiveFormsModule,
-    OktaAuthModule
+    CodeInputModule
   ],
   providers: [ProductListService, FormService, CheckoutService,
-    {provide: OKTA_CONFIG, useValue: {oktaAuth}},
     {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptorService, multi: true}
   ],
   bootstrap: [AppComponent]

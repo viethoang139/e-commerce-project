@@ -1,36 +1,27 @@
-import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
-import { Inject, Injectable } from '@angular/core';
-import { OKTA_AUTH } from '@okta/okta-angular';
-import { OktaAuth } from '@okta/okta-auth-js';
-import { Observable, from, lastValueFrom } from 'rxjs';
-import { environment } from '../../environments/environment';
+import {HttpEvent, HttpHandler, HttpHeaders, HttpInterceptor, HttpRequest} from '@angular/common/http';
+import {Injectable } from '@angular/core';
+import { Observable,  } from 'rxjs';
+import {TokenService} from "./token.service";
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthInterceptorService implements HttpInterceptor{
 
-  constructor(@Inject(OKTA_AUTH) private oktaAuth: OktaAuth) { 
+  constructor(private tokenService: TokenService) {
 
   }
-
-
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    return from(this.handleAccess(req,next))
+      const token = this.tokenService.token;
+      if(token){
+        const authReq = req.clone({
+          headers: new HttpHeaders({
+            Authorization: 'Bearer ' + token
+          })
+        });
+        return next.handle(authReq);
+      }
+      return next.handle((req));
   }
 
-  private async handleAccess(req: HttpRequest<any>, next: HttpHandler): Promise<HttpEvent<any>> {
-    const theEndPoint = environment.shopApiUrl + '/orders';
-    const securedEndpoints = [theEndPoint];
-    if(securedEndpoints.some(url => req.urlWithParams.includes(url))){
-      const accessToken = this.oktaAuth.getAccessToken();
-
-      req = req.clone({
-        setHeaders: {
-          Authorization: 'Bearer ' + accessToken
-        }
-      });
-    }
-    return await lastValueFrom(next.handle(req));
-  }
 }

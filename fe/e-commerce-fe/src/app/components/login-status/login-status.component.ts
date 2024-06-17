@@ -1,6 +1,6 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import { OKTA_AUTH, OktaAuthStateService } from '@okta/okta-angular';
-import { OktaAuth } from '@okta/okta-auth-js';
+import {Component, OnInit} from '@angular/core';
+import {Router} from "@angular/router";
+import {AuthService} from "../../services/auth.service";
 
 @Component({
   selector: 'app-login-status',
@@ -9,40 +9,27 @@ import { OktaAuth } from '@okta/okta-auth-js';
 })
 export class LoginStatusComponent implements OnInit{
 
-  isAuthenticated: boolean = false;
-  userFullName: string = '';
-  storage: Storage = sessionStorage;
-  
-  constructor(private oktaAuthService: OktaAuthStateService, 
-    @Inject(OKTA_AUTH) private oktaAuth: OktaAuth
+  isAuthenticated: boolean;
+
+  constructor(
+      private route: Router,
+      private authService: AuthService
   ){
-
+      this.authService.isUserLogin.subscribe(value => {
+        this.isAuthenticated = value;
+      })
   }
-
   ngOnInit(): void {
-      this.oktaAuthService.authState$.subscribe(
-        (result) => {
-          this.isAuthenticated = result.isAuthenticated!;
-          this.getUserDetails();
-        }
-      )
-  }
-  getUserDetails() {
-      if(this.isAuthenticated){
-        this.oktaAuth.getUser().then(
-          (res) => {
-            this.userFullName = res.name as string;
-
-            const theEmail = res.email;
-
-            this.storage.setItem('userEmail', JSON.stringify(theEmail));
-          }
-        )
-      }
+    this.isAuthenticated = sessionStorage.getItem('isLogin') === "user has login";
   }
 
   logout(){
-    this.oktaAuth.signOut();
+      localStorage.removeItem('token');
+      sessionStorage.removeItem('isLogin');
+      this.isAuthenticated = false;
+      this.route.navigate(['login']);
   }
+
+
 
 }

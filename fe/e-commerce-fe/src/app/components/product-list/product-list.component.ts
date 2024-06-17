@@ -24,13 +24,13 @@ export class ProductListComponent implements OnInit{
   searchMode: boolean = false;
 
   pageNum: number = 1;
-  
+
   pageSize: number = 10;
 
   totalElements: number = 0;
 
 
-  
+
   constructor(private productService: ProductListService,
     private route: ActivatedRoute, private cartService: CartService
   ){
@@ -41,7 +41,6 @@ export class ProductListComponent implements OnInit{
     this.route.paramMap.subscribe(() => {
       this.getAllProducts();
     });
-      
   }
 
   getAllProducts(){
@@ -52,7 +51,6 @@ export class ProductListComponent implements OnInit{
       else{
         this.handleListProduct();
       }
-      
   }
   handleSearchProduct() {
      const theKeyword: string = this.route.snapshot.paramMap.get("keyword")!;
@@ -92,7 +90,7 @@ export class ProductListComponent implements OnInit{
 
     this.previousCategoryId = this.currentCategoryId;
 
-    
+
 
 
       return this.productService.getAllProductPaginate(this.pageNum - 1, this.pageSize, this.currentCategoryId)
@@ -101,13 +99,13 @@ export class ProductListComponent implements OnInit{
          this.pageNum = data.pageNum + 1;
          this.pageSize = data.pageSize;
           this.totalElements = data.totalElements;
-        
+
       })
   }
 
   updatePageSize(event: any) {
       this.pageSize = +event.target.value;
-      this.pageNum = 1;  
+      this.pageNum = 1;
       this.getAllProducts();
   }
 
@@ -120,5 +118,5 @@ export class ProductListComponent implements OnInit{
     this.cartService.addToCart(theCartItem);
   }
 
-    
+
 }

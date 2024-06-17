@@ -4,7 +4,7 @@
             <form [formGroup]="checkOutFormGroup" (ngSubmit)="onSubmit()">
 
                 <!-- Customer -->
-                <div formGroupName="customer" class="form-area">
+                <div formGroupName="user" class="form-area">
                     <h3>Customer</h3>
 
                     <div class="row">
@@ -25,9 +25,9 @@
                                     </div>
                                 </div>
 
-                                
 
-                                
+
+
                             </div>
                         </div>
                     </div>
@@ -211,7 +211,7 @@
                                     <div *ngIf="billingAddressCountry.errors['required']">
                                         Country is required
                                     </div>
-                                    
+
                                 </div>
                             </div>
                         </div>
@@ -321,7 +321,7 @@
                                         Credit card type is required
                                     </div>
                                 </div>
-            
+
                             </div>
                         </div>
                     </div>
@@ -345,7 +345,7 @@
 
                                 </div>
                             </div>
-                            
+
                         </div>
                     </div>
 
@@ -403,7 +403,7 @@
                                     <option *ngFor="let month of creditCardMonths">
                                         {{month}}
                                     </option>
-                                
+
                                 </select>
                             </div>
                         </div>

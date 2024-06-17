@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CartService } from '../../services/cart.service';
 import { CartItem } from '../../commons/cart-item';
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-cart-details',
@@ -34,7 +35,6 @@ export class CartDetailsComponent implements OnInit{
     this.cartService.totalQuantity.subscribe(data => {
       this.totalQuantity = data;
     })
-
     this.cartService.computeCartTotals();
   }
 
