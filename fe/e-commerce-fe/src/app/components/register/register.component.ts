@@ -3,7 +3,6 @@ import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {AuthService} from "../../services/auth.service";
 import {CustomValidators} from "../../commons/custom-validators";
 import {RegistrationRequest} from "../../commons/registration-request";
-import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-register',
@@ -15,8 +14,7 @@ export class RegisterComponent {
    registerForm!: FormGroup;
    registrationRequest: RegistrationRequest = new RegistrationRequest();
   constructor(private authService: AuthService,
-              private formBuilder: FormBuilder,
-              private router: Router){
+              private formBuilder: FormBuilder){
 
   }
   ngOnInit(): void{
@@ -59,9 +57,14 @@ export class RegisterComponent {
     this.registrationRequest = this.registerForm.controls['user'].value;
     console.log(this.registrationRequest);
     this.authService.register(this.registrationRequest)
-      .subscribe(data => {
-          console.log(data);
-      })
-    this.router.navigateByUrl('login');
+      .subscribe({
+          next: () => {
+            alert(`6 digit code has been sent to ${this.registrationRequest.email}. Please use that code to activate your account`);
+          },
+          error: err => {
+            alert(`There was an error: ${err.message}`);
+          }
+        }
+      )
   }
 }

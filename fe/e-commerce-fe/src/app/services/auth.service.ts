@@ -18,7 +18,7 @@ export class AuthService {
   isUserLogin: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   register(registrationRequest: RegistrationRequest): Observable<any>{
       const registerUrl = `${this.base_url}/register`;
-      return this.httpClient.post(registerUrl, registrationRequest);
+      return this.httpClient.post<RegistrationRequest>(registerUrl, registrationRequest);
   }
 
   authenticate(authenticationRequest: AuthenticationRequest): Observable<any>{
